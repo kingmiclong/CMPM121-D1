@@ -17,20 +17,31 @@ app.append(button);
 
 // Step 2
 const counterDiv = document.createElement("div");
-let counter: number = 0; // Initialize counter
-counterDiv.innerHTML = `${counter} rockets`; // Display initial counter value
+let counter: number = 0;
+let growthRate: number = 0;
+counterDiv.innerHTML = `${counter.toFixed(2)} rockets`;
 app.append(counterDiv);
+
+// Step 5 Upgrade button
+const upgradeButton = document.createElement("button");
+upgradeButton.innerHTML = "Upgrade ⚔";
+upgradeButton.disabled = true; // disable first
+app.append(upgradeButton);
 
 // Step 4
 let lastTime: number = 0; // Time from last frame
 
 // counter for auto click
 const updateCounter = (time: number) => {
-  const deltaTime = time - lastTime; // Time elapsed since last frame in milliseconds
-  const increment = deltaTime * 0.001; // Calculate fractional increment based on time elapsed
-  counter += increment; // Increment counter
-  counterDiv.innerHTML = `${counter.toFixed(2)} rockets`; // Update display with two decimal places
-  lastTime = time; // Update lastTime for the next frame
+  const deltaTime = time - lastTime;
+  const increment = deltaTime * 0.001 * growthRate;
+  counter += increment; // counter
+  counterDiv.innerHTML = `${counter.toFixed(2)} rockets`; // initial
+  lastTime = time; // check the last frame
+
+  // disable for 10 seconds
+  upgradeButton.disabled = counter < 10;
+
   requestAnimationFrame(updateCounter); // Request the next animation frame
 };
 
@@ -47,4 +58,10 @@ button.addEventListener("click", () => {
   requestAnimationFrame(() => {
     button.style.opacity = "1";
   });
+});
+
+upgradeButton.addEventListener("click", () => {
+  counter -= 10; // Deduct 10 units from the counter
+  growthRate++; // Increment the growth rate by 1
+  counterDiv.innerHTML = `${counter.toFixed(2)} rockets`; // Update display
 });
