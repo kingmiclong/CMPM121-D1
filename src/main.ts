@@ -21,6 +21,12 @@ let counter: number = 0;  // Initialize counter
 counterDiv.innerHTML = `${counter} rockets`;  // Display initial counter value
 app.append(counterDiv);
 
+// counter for auto click 
+const updateCounter = () => {
+  counter++;
+  counterDiv.innerHTML = `${counter} rockets`;
+};
+
 // Visual respond
 button.addEventListener("click", () => {
   button.style.opacity = "0.5";  
@@ -33,3 +39,6 @@ button.addEventListener("click", () => {
     button.style.opacity = "1";
   }, 100);
 });
+
+// Increment the counter automatically every second
+setInterval(updateCounter, 1000);
