@@ -66,14 +66,14 @@ upgradeButton.addEventListener("click", () => {
   counterDiv.innerHTML = `${counter.toFixed(2)} rockets`; // Update display
 });
 
-// step 6
+// Upgrades
 const upgradeDiv = document.createElement("div");
 upgradeDiv.className = "upgrades";
 app.append(upgradeDiv);
 
 // Item A
 let itemACount: number = 0;
-const itemACost: number = 10;
+let itemACost: number = 10;
 const itemAGrowthRate: number = 0.1;
 const itemAButton = document.createElement("button");
 itemAButton.innerHTML = `Buy A (${itemACost})`;
@@ -81,7 +81,7 @@ upgradeDiv.append(itemAButton);
 
 // Item B
 let itemBCount: number = 0;
-const itemBCost: number = 100;
+let itemBCost: number = 100;
 const itemBGrowthRate: number = 2.0;
 const itemBButton = document.createElement("button");
 itemBButton.innerHTML = `Buy B (${itemBCost})`;
@@ -89,7 +89,7 @@ upgradeDiv.append(itemBButton);
 
 // Item C
 let itemCCount: number = 0;
-const itemCCost: number = 1000;
+let itemCCost: number = 1000;
 const itemCGrowthRate: number = 50.0;
 const itemCButton = document.createElement("button");
 itemCButton.innerHTML = `Buy C (${itemCCost})`;
@@ -153,5 +153,51 @@ itemCButton.addEventListener("click", () => {
     counter -= itemCCost;
     itemCCount++;
     growthRate += itemCGrowthRate;
+  }
+});
+
+// Update function for automatic price increase
+const updatePrice = (currentPrice: number): number => {
+  return currentPrice * 1.15;
+};
+
+// Update button labels
+const updateButtonLabels = () => {
+  itemAButton.innerHTML = `Buy A (${itemACost.toFixed(2)})`;
+  itemBButton.innerHTML = `Buy B (${itemBCost.toFixed(2)})`;
+  itemCButton.innerHTML = `Buy C (${itemCCost.toFixed(2)})`;
+};
+
+// Update button labels initially
+updateButtonLabels();
+
+// Modify button click handlers to include price increase
+itemAButton.addEventListener("click", () => {
+  if (counter >= itemACost) {
+    counter -= itemACost;
+    itemACount++;
+    growthRate += itemAGrowthRate;
+    itemACost = updatePrice(itemACost);
+    updateButtonLabels();
+  }
+});
+
+itemBButton.addEventListener("click", () => {
+  if (counter >= itemBCost) {
+    counter -= itemBCost;
+    itemBCount++;
+    growthRate += itemBGrowthRate;
+    itemBCost = updatePrice(itemBCost);
+    updateButtonLabels();
+  }
+});
+
+itemCButton.addEventListener("click", () => {
+  if (counter >= itemCCost) {
+    counter -= itemCCost;
+    itemCCount++;
+    growthRate += itemCGrowthRate;
+    itemCCost = updatePrice(itemCCost);
+    updateButtonLabels();
   }
 });
