@@ -1,9 +1,20 @@
 import "./style.css";
 
+interface Item {
+  name: string;
+  cost: number;
+  rate: number;
+}
+
+const availableItems: Item[] = [
+  { name: "Satellite", cost: 10, rate: 0.1 },
+  { name: "Space Station", cost: 100, rate: 2 },
+  { name: "Moon Base", cost: 1000, rate: 50 },
+];
+
 const app: HTMLDivElement = document.querySelector("#app")!;
 
 const gameName = "Your Game";
-
 document.title = gameName;
 
 const header = document.createElement("h1");
@@ -70,29 +81,28 @@ const upgradeDiv = document.createElement("div");
 upgradeDiv.className = "upgrades";
 app.append(upgradeDiv);
 
-// Item A
-let itemACount: number = 0;
-let itemACost: number = 10;
-const itemAGrowthRate: number = 0.1;
-const itemAButton = document.createElement("button");
-itemAButton.innerHTML = `Buy Satellite (${itemACost})`;
-upgradeDiv.append(itemAButton);
+const itemCounts: { [key: string]: number } = {};
+const itemCosts: { [key: string]: number } = {};
 
-// Item B
-let itemBCount: number = 0;
-let itemBCost: number = 100;
-const itemBGrowthRate: number = 2.0;
-const itemBButton = document.createElement("button");
-itemBButton.innerHTML = `Buy Space Station (${itemBCost})`;
-upgradeDiv.append(itemBButton);
+// Refactor to item sets
+availableItems.forEach((item) => {
+  const itemButton = document.createElement("button");
+  itemButton.innerHTML = `Buy ${item.name} (${item.cost})`;
+  upgradeDiv.append(itemButton);
 
-// Item C
-let itemCCount: number = 0;
-let itemCCost: number = 1000;
-const itemCGrowthRate: number = 50.0;
-const itemCButton = document.createElement("button");
-itemCButton.innerHTML = `Buy Moon Base (${itemCCost})`;
-upgradeDiv.append(itemCButton);
+  itemCounts[item.name] = 0;
+  itemCosts[item.name] = item.cost;
+
+  itemButton.addEventListener("click", () => {
+    if (counter >= itemCosts[item.name]) {
+      counter -= itemCosts[item.name];
+      itemCounts[item.name]++;
+      growthRate += item.rate;
+      itemCosts[item.name] = updatePrice(itemCosts[item.name]);
+      updateButtonLabels();
+    }
+  });
+});
 
 // Status displays
 const statusDiv = document.createElement("div");
@@ -103,100 +113,44 @@ const growthRateDisplay = document.createElement("div");
 growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(2)} units/sec`;
 statusDiv.append(growthRateDisplay);
 
-const itemACountDisplay = document.createElement("div");
-itemACountDisplay.innerHTML = `Item A: ${itemACount}`;
-statusDiv.append(itemACountDisplay);
-
-const itemBCountDisplay = document.createElement("div");
-itemBCountDisplay.innerHTML = `Item B: ${itemBCount}`;
-statusDiv.append(itemBCountDisplay);
-
-const itemCCountDisplay = document.createElement("div");
-itemCCountDisplay.innerHTML = `Item C: ${itemCCount}`;
-statusDiv.append(itemCCountDisplay);
+// Status displays for each item
+Object.keys(itemCounts).forEach((key) => {
+  const countDisplay = document.createElement("div");
+  countDisplay.innerHTML = `${key}: ${itemCounts[key]}`;
+  statusDiv.append(countDisplay);
+});
 
 // Update function to handle growth and display
 const update = () => {
   counter += growthRate;
-  counterDiv.innerHTML = `${counter.toFixed(2)} units`;
+  counterDiv.innerHTML = `${counter.toFixed(2)} space credits`;
   growthRateDisplay.innerHTML = `Growth Rate: ${growthRate.toFixed(
     2,
   )} units/sec`;
-  itemACountDisplay.innerHTML = `Item A: ${itemACount}`;
-  itemBCountDisplay.innerHTML = `Item B: ${itemBCount}`;
-  itemCCountDisplay.innerHTML = `Item C: ${itemCCount}`;
+  Object.keys(itemCounts).forEach((key) => {
+    const countDisplay = statusDiv.querySelector(`div:contains('${key}')`);
+    if (countDisplay) {
+      countDisplay.innerHTML = `${key}: ${itemCounts[key]}`;
+    }
+  });
 };
 
 // Main update loop
 setInterval(update, 1000);
 
-// Button click handlers
-itemAButton.addEventListener("click", () => {
-  if (counter >= itemACost) {
-    counter -= itemACost;
-    itemACount++;
-    growthRate += itemAGrowthRate;
-  }
-});
-
-itemBButton.addEventListener("click", () => {
-  if (counter >= itemBCost) {
-    counter -= itemBCost;
-    itemBCount++;
-    growthRate += itemBGrowthRate;
-  }
-});
-
-itemCButton.addEventListener("click", () => {
-  if (counter >= itemCCost) {
-    counter -= itemCCost;
-    itemCCount++;
-    growthRate += itemCGrowthRate;
-  }
-});
-
-// Update function for automatic price increase
+// Refactor growth
 const updatePrice = (currentPrice: number): number => {
   return currentPrice * 1.15;
 };
 
-// Update button labels
+// Refactor Button
 const updateButtonLabels = () => {
-  itemAButton.innerHTML = `Buy A (${itemACost.toFixed(2)})`;
-  itemBButton.innerHTML = `Buy B (${itemBCost.toFixed(2)})`;
-  itemCButton.innerHTML = `Buy C (${itemCCost.toFixed(2)})`;
+  upgradeDiv.childNodes.forEach((node, index) => {
+    if (node instanceof HTMLButtonElement) {
+      const item = availableItems[index];
+      node.innerHTML = `Buy ${item.name} (${itemCosts[item.name].toFixed(2)})`;
+    }
+  });
 };
 
-// Update button labels initially
 updateButtonLabels();
-
-// Modify button click handlers to include price increase
-itemAButton.addEventListener("click", () => {
-  if (counter >= itemACost) {
-    counter -= itemACost;
-    itemACount++;
-    growthRate += itemAGrowthRate;
-    itemACost = updatePrice(itemACost);
-    updateButtonLabels();
-  }
-});
-
-itemBButton.addEventListener("click", () => {
-  if (counter >= itemBCost) {
-    counter -= itemBCost;
-    itemBCount++;
-    growthRate += itemBGrowthRate;
-    itemBCost = updatePrice(itemBCost);
-    updateButtonLabels();
-  }
-});
-
-itemCButton.addEventListener("click", () => {
-  if (counter >= itemCCost) {
-    counter -= itemCCost;
-    itemCCount++;
-    growthRate += itemCGrowthRate;
-    itemCCost = updatePrice(itemCCost);
-    updateButtonLabels();
-  }
-});
