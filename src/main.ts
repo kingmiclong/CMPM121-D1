@@ -4,12 +4,41 @@ interface Item {
   name: string;
   cost: number;
   rate: number;
+  description: string; // Added description field
 }
 
 const availableItems: Item[] = [
-  { name: "Satellite", cost: 10, rate: 0.1 },
-  { name: "Space Station", cost: 100, rate: 2 },
-  { name: "Moon Base", cost: 1000, rate: 50 },
+  {
+    name: "Satellite",
+    cost: 10,
+    rate: 0.1,
+    description: "Orbiting tech for minor space credits.",
+  },
+  {
+    name: "Space Station",
+    cost: 100,
+    rate: 2,
+    description: "A hub for galactic trade and growth.",
+  },
+  {
+    name: "Moon Base",
+    cost: 1000,
+    rate: 50,
+    description: "A lunar outpost generating massive credits.",
+  },
+  // Adding two new items
+  {
+    name: "Asteroid Mining Rig",
+    cost: 5000,
+    rate: 200,
+    description: "Harvesting rare minerals for high profits.",
+  },
+  {
+    name: "Interstellar Colony",
+    cost: 20000,
+    rate: 1000,
+    description: "Colonizing distant worlds for exponential growth.",
+  },
 ];
 
 const app: HTMLDivElement = document.querySelector("#app")!;
@@ -102,6 +131,15 @@ availableItems.forEach((item) => {
       updateButtonLabels();
     }
   });
+});
+
+// Additional code to display descriptions (optional)
+// This can be adjusted based on how you want to present the information in your game
+availableItems.forEach((item) => {
+  const descriptionDiv = document.createElement("div");
+  descriptionDiv.className = "item-description";
+  descriptionDiv.innerHTML = `${item.name}: ${item.description}`;
+  app.append(descriptionDiv);
 });
 
 // Status displays
