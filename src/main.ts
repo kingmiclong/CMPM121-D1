@@ -12,14 +12,14 @@ app.append(header);
 
 // Step 1
 const button = document.createElement("button");
-button.innerHTML = "🚀";
+button.innerHTML = "Launch 🚀";
 app.append(button);
 
 // Step 2
 const counterDiv = document.createElement("div");
 let counter: number = 0;
 let growthRate: number = 0;
-counterDiv.innerHTML = `${counter.toFixed(2)} rockets`;
+counterDiv.innerHTML = `${counter.toFixed(2)} space credits`;
 app.append(counterDiv);
 
 // Step 5 Upgrade button
@@ -51,9 +51,8 @@ requestAnimationFrame(updateCounter);
 // Visual respond
 button.addEventListener("click", () => {
   button.style.opacity = "0.5";
-  // plus 1 each time it click
   counter++;
-  counterDiv.innerHTML = `${counter} rockets`;
+  counterDiv.innerHTML = `${counter} space credits`;
 
   requestAnimationFrame(() => {
     button.style.opacity = "1";
@@ -76,7 +75,7 @@ let itemACount: number = 0;
 let itemACost: number = 10;
 const itemAGrowthRate: number = 0.1;
 const itemAButton = document.createElement("button");
-itemAButton.innerHTML = `Buy A (${itemACost})`;
+itemAButton.innerHTML = `Buy Satellite (${itemACost})`;
 upgradeDiv.append(itemAButton);
 
 // Item B
@@ -84,7 +83,7 @@ let itemBCount: number = 0;
 let itemBCost: number = 100;
 const itemBGrowthRate: number = 2.0;
 const itemBButton = document.createElement("button");
-itemBButton.innerHTML = `Buy B (${itemBCost})`;
+itemBButton.innerHTML = `Buy Space Station (${itemBCost})`;
 upgradeDiv.append(itemBButton);
 
 // Item C
@@ -92,7 +91,7 @@ let itemCCount: number = 0;
 let itemCCost: number = 1000;
 const itemCGrowthRate: number = 50.0;
 const itemCButton = document.createElement("button");
-itemCButton.innerHTML = `Buy C (${itemCCost})`;
+itemCButton.innerHTML = `Buy Moon Base (${itemCCost})`;
 upgradeDiv.append(itemCButton);
 
 // Status displays
